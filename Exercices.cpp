@@ -131,6 +131,8 @@ void noteTeme(char* fisierBinar) {
 	fclose(f);
 }
 
+
+
 int main() {
 	char fisierBinar[] = "Fis_relativ_abs.dat", fisierText[] = "Student.txt";
 	schimbatAbsente(fisierBinar);
