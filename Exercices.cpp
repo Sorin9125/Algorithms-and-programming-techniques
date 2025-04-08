@@ -14,6 +14,16 @@ typedef struct {
 	situatie absente[15];
 } student;
 
+typedef struct {
+	int nrm;
+	char nume[30];
+	int grupa;
+	char pp;
+	char teme[10];
+	char ex;
+	char is;
+} STUDENT;
+
 void afisare(char* fisierBinar, char* fisierText) {
 	FILE* f, * g;
 	student s;
@@ -47,12 +57,9 @@ void afisare(char* fisierBinar, char* fisierText) {
 	fclose(f);
 }
 
-
-
-int main() {
+void schimbatAbsente(char* fisierBinar) {
 	FILE* f;
 	student s;
-	char fisierBinar[] = "Fis_relativ_abs.dat", fisierText[] = "Student.txt";
 	f = fopen(fisierBinar, "r+b");
 	if (!f) {
 		printf("Fisierul binar nu s-a deschis");
@@ -87,6 +94,46 @@ int main() {
 		}
 	}
 	fclose(f);
+}
+
+void noteTeme(char* fisierBinar) {
+	FILE* f;
+	STUDENT s;
+	f = fopen(fisierBinar, "r+b");
+	if (!f) {
+		printf("Fisierul binar nu s-a deschis");
+	}
+	else {
+		int nrMat;
+		printf("Introduceti numarul matricol ");
+		scanf("%d", &nrMat);
+		while (!feof(stdin)) {
+			(f, nrMat * sizeof(STUDENT), SEEK_SET);
+			fread(&s, sizeof(STUDENT), 1, f);
+			if (s.is == 1) {
+				int tema;
+				char rezultat;
+				printf("Ce tema este notata? ");
+				scanf("%d", &tema);
+				printf("Ce nota a obtinut? ");
+				scanf("%d", &rezultat);
+				s.teme[tema] = rezultat;
+			}
+			else {
+				printf("Articolul nu exista");
+			}
+			fseek(f, nrMat * sizeof(STUDENT), SEEK_SET);
+			fwrite(&s, sizeof(STUDENT), 1, f);
+			printf("Introduceti urmatorul cod matricol ");
+			scanf("%d", &nrMat);
+		}
+	}
+	fclose(f);
+}
+
+int main() {
+	char fisierBinar[] = "Fis_relativ_abs.dat", fisierText[] = "Student.txt";
+	schimbatAbsente(fisierBinar);
 	afisare(fisierBinar, fisierText);
 	return 0;
 }
