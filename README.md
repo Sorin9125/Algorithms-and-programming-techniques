@@ -1,1 +1,1 @@
-# Fisiere organizate relativ
+# Exercies for my algorithms and programming techniques class at university
