@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 int maxim_pare(int* pare, int st, int dr) {
 	int a, b, m;
@@ -94,11 +95,54 @@ int numar0(long n) {
 	}
 }
 
+float equation(float x) {
+	return x * x - 2;
+}
+
+void bisection(float a, float b, float eps, int n, float(*f)(float), float* x) {
+	if ((*f)(a) == 0) {
+		*x = a;
+	}
+	else {
+		if ((*f)(b) == 0) {
+			*x = b;
+		}
+		else {
+		if ((*f)(a) * (*f)(b) > 0) {
+				printf("Solutia nu se afla in intervalul [%f, %f]", a, b);
+			}
+			else {
+				while (n != 0) {
+					*x = (a + b) / 2;
+					if ((*f)(*x) == 0) {
+						n = 0;
+					}
+					else {
+						if (fabsf(a - b) < eps) {
+							n = 0;
+						}
+						else {
+							if ((*f)(*x) * (*f)(a) < 0) {
+								b = *x;
+							}
+							else {
+								a = *x;
+							}
+						n--;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+}
+
 int main() {
-	int* a;
-	long n;
-	printf("Introduceti numarul de elemente: ");
-	scanf("%ld", &n);
+	float a = 0, b = 2, eps = 0.1, x;
+	int n = 100;
+	bisection(a, b, eps, n, equation, &x);
+	printf("Solutia ecuatiei este: %f", x);
 	/*a = (int*)malloc(sizeof(int) * n);
 	for (int i = 0; i < n; i++) {
 		printf("a[%d] = ", i);
@@ -133,9 +177,14 @@ int main() {
 	printf("Suma elementelor pare este: %d", suma_para(a, n - 1));
 	*/
 	
+	
+	/*
 	printf("Numarul de 0 al numarului %ld este: %d", n, numar0(n));
+	*/
 
-	//free(a);
+	/*
+		free(a);
+	*/
 	
 	return 0;
 }
