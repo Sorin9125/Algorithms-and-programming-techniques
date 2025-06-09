@@ -131,11 +131,52 @@ void afisare_matrice_adiacenta(int** matrice, int noduri) {
 		printf("\n");
 	}
 }
- 
+
+void royWarshall(int** matrice, int n, int*** royWarshall) {
+	*royWarshall = (int**)calloc(n + 1, sizeof(int*));
+	for (int i = 1; i <= n; i++) {
+		(*royWarshall)[i] = (int*)calloc(n + 1, sizeof(int));
+	}
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			(*royWarshall)[i][j] = matrice[i][j];
+		}
+	}
+	for (int k = 1; k <= n; k++) {
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				if ((*royWarshall)[i][k] == 1 && (*royWarshall)[k][j] == 1) {
+					(*royWarshall)[i][j] = 1;
+				}
+			}
+		}
+	}
+}
+
+void royFloyd(int** matrice, int n, int*** royFloyd) {
+	*royFloyd = (int**)calloc(n + 1, sizeof(int*));
+	for (int i = 1; i <= n; i++) {
+		(*royFloyd)[i] = (int*)calloc(n + 1, sizeof(int));
+	}
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			(*royFloyd)[i][j] = matrice[i][j];
+		}
+	}
+	for (int k = 1; k <= n; k++) {
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				if ((*royFloyd)[i][k] + (*royFloyd)[k][j] < (*royFloyd)[i][j]) {
+					(*royFloyd)[i][j] = (*royFloyd)[i][k] + (*royFloyd)[k][j];
+				}
+			}
+		}
+	}
+}
 int main() {
 	int** matrice, noduri, muchii;
 	
-	int* grad, k = 0, nod, ok = 0;
+	int** drumuri, k = 0, nod, ok = 0;
 	
 	/* Noduri adiacente
 		transformare_matrice_neorientat_neponderat(&matrice, &noduri, &muchii);
@@ -178,21 +219,37 @@ int main() {
 	*/
 
 	/*
-	
+		transformare_matrice_orientat_neponderat(&matrice, &noduri, &muchii);
+		afisare_matrice_adiacenta(matrice, noduri);
+		int minim = grad_interior_minim(matrice, noduri, &grad, &k);
+		printf("Gradul minim este %d si nodurile care-l au sunt: ", minim);
+		for (int i = 0; i < k; i++) {
+			printf("%d ", grad[i]);
+		}
 	*/
 	
+	/*
+	
+	*/
+
 	transformare_matrice_orientat_neponderat(&matrice, &noduri, &muchii);
 	afisare_matrice_adiacenta(matrice, noduri);
-	int minim = grad_interior_minim(matrice, noduri, &grad, &k);
-	printf("Gradul minim este %d si nodurile care-l au sunt: ", minim);
-	for (int i = 0; i < k; i++) {
-		printf("%d ", grad[i]);
+	royWarshall(matrice, noduri, &drumuri);
+	printf("Matricea drumurilor este\n");
+	for (int i = 1; i <= noduri; i++) {
+		for (int j = 1; j <= noduri; j++) {
+			printf("%d ", drumuri[i][j]);
+		}
+		printf("\n");
 	}
-
 	for (int i = 1; i <= noduri; i++) {
 		free(matrice[i]);
 	}
 	free(matrice);
-	free(grad);
+
+	for (int i = 1; i <= noduri; i++) {
+		free(drumuri[i]);
+	}
+	free(drumuri);
 	return 0;
 }
